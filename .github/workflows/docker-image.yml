@@ -30,17 +30,19 @@ jobs:
       env:
         DOCKER_USER: ${{ secrets.DOCKER_USER }}
         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        NEW_VERSION: ${{steps.version.outputs.version }}
       run: |
-        echo $NEW_VERSION
         docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
 
-    # - name: Build the Docker image
-    #   run: |
-    #     docker build -t jorgefreyes/github:0.0.2 .
-    #     docker build -t jorgefreyes/github .
+    - name: Build the Docker image
+      env:
+        NEW_VERSION: ${{steps.version.outputs.version }}
+      run: |
+        docker build -t jorgefreyes/github:$NEW_VERSION .
+        docker build -t jorgefreyes/github .
 
-    # - name: Push the Docker image
-    #   run: |
-    #     docker push jorgefreyes/github:0.0.2
-    #     docker push jorgefreyes/github
+    - name: Push the Docker image
+      env:
+        NEW_VERSION: ${{steps.version.outputs.version }}
+      run: |
+        docker push jorgefreyes/github:$NEW_VERSION
+        docker push jorgefreyes/github
